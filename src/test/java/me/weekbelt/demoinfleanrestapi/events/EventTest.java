@@ -13,8 +13,6 @@ public class EventTest {
                 .name("Inflearn Spring REST API")
                 .description("REST API develoment with Spring")
                 .build();
-        //when
-
         //then
         assertThat(event).isNotNull();
     }
