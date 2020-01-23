@@ -1,6 +1,7 @@
 package me.weekbelt.demoinfleanrestapi.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.weekbelt.demoinfleanrestapi.common.TestDescription;
 import org.apache.tomcat.jni.Local;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -35,6 +36,7 @@ public class EventControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
+    @TestDescription("정상적으로 이벤트를 생성하는 테스트")
     @Test
     public void createEvent() throws Exception {
         //given
@@ -68,6 +70,7 @@ public class EventControllerTest {
 
     }
 
+    @TestDescription("입력 받을 수 없는 값을 사용한 경우에 에러가 발생하는 테스트")
     @Test
     public void createEvent_Bad_Request() throws Exception {
         //given
@@ -99,7 +102,7 @@ public class EventControllerTest {
     }
 
 
-    // 입력 값이 NULL일 경우 @Valid로 검증하고 error가 있다면 badRequest
+    @TestDescription("입력 값이 비어있는 경우에 에러가 발생하는 테스트")
     @Test
     public void createEvent_Bad_Request_Empty_Input() throws Exception {
         //given
@@ -114,7 +117,7 @@ public class EventControllerTest {
         ;
     }
 
-    // 입력 값이 있지만 올바르지 않은 값을 넣을 경우 BadRequeset
+    @TestDescription("입력 값이 잘못된 경우에 에러가 발생하는 테스트")
     @Test
     public void createEvent_Bad_Request_Wrong_Input() throws Exception {
         //given
