@@ -36,10 +36,12 @@ public class EventController {
             return ResponseEntity.badRequest().body(errors);
         }
 
+        // DTO객체를 Entity객체로 바꾸어 저장하는 로직
         Event event = modelMapper.map(eventDto, Event.class);
         event.update();
         Event newEvent = eventRepository.save(event);
 
+        // 링크 추가 로직
         WebMvcLinkBuilder selfLinkBuilder = linkTo(EventController.class).slash(newEvent.getId());
         URI createUri = selfLinkBuilder.toUri();
 
@@ -47,6 +49,7 @@ public class EventController {
         eventResource.add(linkTo(EventController.class).withRel("query-events"));
         eventResource.add(selfLinkBuilder.withRel("update-event"));
 
+        // ResponseEntity로 직접 헤더값을 설정하여 api를 리턴
         return ResponseEntity.created(createUri).body(eventResource);
     }
 }
