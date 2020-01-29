@@ -1,6 +1,7 @@
 package me.weekbelt.demoinfleanrestapi.events;
 
 import lombok.RequiredArgsConstructor;
+import me.weekbelt.demoinfleanrestapi.common.ErrorsResource;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
@@ -27,14 +28,14 @@ public class EventController {
     private final EventValidator eventValidator;
 
     @PostMapping
-    public ResponseEntity createEvent(@RequestBody @Valid EventDto eventDto, Errors errors) {
+    public ResponseEntity<?> createEvent(@RequestBody @Valid EventDto eventDto, Errors errors) {
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         eventValidator.validate(eventDto, errors);
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body(errors);
+            return badRequest(errors);
         }
 
         // DTO객체를 Entity객체로 바꾸어 저장하는 로직
@@ -53,5 +54,9 @@ public class EventController {
 
         // ResponseEntity로 직접 헤더값을 설정하여 api를 리턴
         return ResponseEntity.created(createUri).body(eventResource);
+    }
+
+    private ResponseEntity<?> badRequest(Errors errors) {
+        return ResponseEntity.badRequest().body(new ErrorsResource(errors));
     }
 }
