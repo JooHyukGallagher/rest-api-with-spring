@@ -3,12 +3,18 @@ package me.weekbelt.demoinfleanrestapi.events;
 import lombok.RequiredArgsConstructor;
 import me.weekbelt.demoinfleanrestapi.common.ErrorsResource;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +60,15 @@ public class EventController {
 
         // ResponseEntity로 직접 헤더값을 설정하여 api를 리턴
         return ResponseEntity.created(createUri).body(eventResource);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> queryEvents(Pageable pageable, PagedResourcesAssembler<Event> assembler) {
+        Page<Event> page = this.eventRepository.findAll(pageable);
+        PagedModel<EntityModel<Event>> pageResource = assembler.toModel(page, e -> new EventResource(e));
+        pageResource.add(new Link("/docs/index.html#resources-events-list").withRel("profile"));
+
+        return ResponseEntity.ok(pageResource);
     }
 
     private ResponseEntity<?> badRequest(Errors errors) {
