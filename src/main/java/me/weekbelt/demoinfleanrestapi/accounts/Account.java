@@ -21,4 +21,8 @@ public class Account {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(value = EnumType.STRING)
     private Set<AccountRole> roles;
+
+    public void setPassword(String encode) {
+        password = encode;
+    }
 }
